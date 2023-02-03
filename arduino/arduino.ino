@@ -29,7 +29,7 @@ void loop() {
   // Serial.println(distance);
 
   if (distance <= 40) {
-    Bluetooth.println(0);
+    Bluetooth.println("alert");
     delay(5000);
   }
 
@@ -37,7 +37,7 @@ void loop() {
     Data = Bluetooth.read();
     if (Data == '0') {
       Serial.println("Test Data Received");
-      Bluetooth.println("R");
+      Bluetooth.println("received");
     } else {
       Serial.println(Data);
     }

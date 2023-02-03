@@ -220,6 +220,7 @@
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="28dp"
+            android:weightSum="10"
             android:background="@color/dark"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -230,12 +231,22 @@
                 android:id="@+id/textView8"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="9"
                 android:gravity="center"
                 android:text="Activity Logs"
                 android:textColor="@color/light"
                 app:fontFamily="@font/poppins_semibold"
                 app:lineHeight="12dp"
                 app:textAllCaps="true" />
+
+            <ImageView
+                android:id="@+id/clearView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="5dp"
+                app:srcCompat="?attr/actionModeCutDrawable" />
         </LinearLayout>
 
         <TextView

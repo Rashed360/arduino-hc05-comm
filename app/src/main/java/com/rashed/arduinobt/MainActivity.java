@@ -33,7 +33,7 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
     TextView activityLog, statusText, onOffText, nameText, interfaceText;
-    ImageView statusLight, onOffSwitch, enableBTSwitch, monitoringImage;
+    ImageView statusLight, onOffSwitch, enableBTSwitch, monitoringImage, clearView;
     Button connectButton, sendTestButton, stopButton;
     Spinner deviceSinner;
     AnimationDrawable monitoringAnimation;
@@ -77,11 +77,23 @@ public class MainActivity extends AppCompatActivity {
         onOffSwitch = (ImageView) findViewById(R.id.onOffSwitch);
         enableBTSwitch = (ImageView) findViewById(R.id.enableBTSwitch);
         monitoringImage = (ImageView) findViewById(R.id.monitoringImage);
+        clearView = (ImageView) findViewById(R.id.clearView);
         connectButton = (Button) findViewById(R.id.connectButton);
         sendTestButton = (Button) findViewById(R.id.sendTestButton);
         stopButton = (Button) findViewById(R.id.stopButton);
 
         activityLog.setMovementMethod(new ScrollingMovementMethod());
+        activityLog.setSelected(true);
+
+        clearView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activityLog.setText("");
+            }
+        });
+
+        getPairedDevices();
+        populateSpinner();
 
         enableBTSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
                     for (BluetoothDevice device : btDevices) {
                         if (selectedDevice.equals(device.getName())) {
                             btDevice = device;
+                            nameText.setText(btDevice.getName());
+                            interfaceText.setText(btDevice.getAddress());
                             activityLog.append("\n► Selected device \"" + btDevice.getName() + " : " + btDevice.getAddress() + "\"");
 
                             ConnectBluetooth cbt = new ConnectBluetooth(btDevice);
@@ -156,41 +170,6 @@ public class MainActivity extends AppCompatActivity {
                 activityLog.append("\n► SND : Test Data Sent");
             }
         });
-
-
-
-
-
-
-
-//        onOffSwitch.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (!bluetoothTurnedOn) {
-//                    onOffText.setText("Off");
-//                    Toast.makeText(MainActivity.this, "Bluetooth Off", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    onOffText.setText("Monitoring");
-//                    btDevices = btAdapter.getRemoteDevice(targetedDevice);
-//                    checkForBTPermission();
-//                    nameText.setText(btDevices.getName());
-//                    interfaceText.setText(targetedDevice);
-//                    onOffSwitch.setImageResource(R.drawable.main_button_active);
-//
-//                    monitoringImage.setBackgroundResource(R.drawable.monitoring_sequence);
-//                    monitoringAnimation = (AnimationDrawable) monitoringImage.getBackground() ;
-//                    monitoringAnimation.start();
-//                }
-//            }
-//        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        getPairedDevices();
-        populateSpinner();
     }
 
     void getPairedDevices() {
@@ -265,8 +244,14 @@ public class MainActivity extends AppCompatActivity {
         private InputStream inputStream;
 
         public DataCommunication (BluetoothSocket socket) {
-            System.out.println("Data Comm started");
+            activityLog.append("\n► INF : Waiting for trigger..");
             btSkt = socket;
+
+            onOffText.setText("Monitoring");
+            onOffSwitch.setImageResource(R.drawable.main_button_active);
+            monitoringImage.setBackgroundResource(R.drawable.monitoring_sequence);
+            monitoringAnimation = (AnimationDrawable) monitoringImage.getBackground() ;
+            monitoringAnimation.start();
 
             try {
                 inputStream = btSkt.getInputStream();
@@ -277,7 +262,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void run() {
-            byte[] buffer = new byte[1024];
+//            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[512];
             int bytes;
 
             while (btSkt.isConnected()) {
@@ -337,14 +323,15 @@ public class MainActivity extends AppCompatActivity {
                     byte[] inputBuffer = (byte[]) message.obj;
                     String recievedMsg = new String(inputBuffer,0,message.arg1);
 
-                    if (recievedMsg.equals('0')) {
-                        activityLog.append("\n► ALERT: Triggered!");
-                    } else if (recievedMsg.equals('R')) {
-                        activityLog.append("\n► ACK: Test data received!");
-                    } else {
-                        activityLog.append("\n► MSG[" + recievedMsg.length() + "] : " + recievedMsg);
+                    if (recievedMsg.contains("lert")) {
+                        activityLog.append("\nALERT: Triggered!");
+                    } else if (recievedMsg.contains("eceived")) {
+                        activityLog.append("\nACK: Test data received!");
                     }
-
+//                    else {
+//                        activityLog.append("\n► MSG[" + recievedMsg.length() + "] : " + recievedMsg);
+//                        System.out.println("MSG[" + recievedMsg.length() + "] : " + recievedMsg);
+//                    }
                     break;
             }
             return true;
