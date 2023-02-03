@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary"
+    app:barrierMargin="1dp"
     tools:context=".MainActivity">
 
     <TextView
@@ -108,39 +109,73 @@
             app:layout_constraintEnd_toEndOf="@+id/textView5"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
-        <Button
-            android:id="@+id/sendButton"
-            android:layout_width="320dp"
-            android:layout_height="45dp"
+        <LinearLayout
+            android:id="@+id/ll1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="10dp"
-            android:text="Send Test Data"
-            android:textColor="@color/darker"
-            app:backgroundTint="@color/info"
-            app:layout_constraintBottom_toTopOf="@+id/stopButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/stopButton"
-            android:layout_width="320dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="25dp"
-            android:text="Stop Service &amp; Exit"
-            android:textColor="@color/light"
-            app:backgroundTint="@color/dark"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
+                android:id="@+id/ll2"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal"
+                android:weightSum="100"
+                app:layout_constraintBottom_toTopOf="@+id/sendTestButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <Spinner
+                    android:id="@+id/deviceSinner"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="60"
+                    android:textColor="@color/darker"
+                    app:fontFamily="@font/poppins" />
+
+                <Button
+                    android:id="@+id/connectButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="40"
+                    android:text="Connect"
+                    android:textColor="@color/darker"
+                    app:backgroundTint="@color/primary"
+                    app:fontFamily="@font/poppins_bold"
+                    app:layout_constraintBottom_toTopOf="@+id/stopButton" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/sendTestButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Send Test Data"
+                android:textColor="@color/darker"
+                app:backgroundTint="@color/warning"
+                app:fontFamily="@font/poppins_bold" />
+
+            <Button
+                android:id="@+id/stopButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Stop Service &amp; Exit"
+                android:textColor="@color/darker"
+                app:backgroundTint="@color/info"
+                app:fontFamily="@font/poppins_bold" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/monitoringImage"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            app:layout_constraintBottom_toTopOf="@+id/sendButton"
+            app:layout_constraintBottom_toTopOf="@+id/ll1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -149,12 +184,12 @@
             android:id="@+id/onOffSwitch"
             android:layout_width="136dp"
             android:layout_height="136dp"
-            android:src="@drawable/main_button_inactive"
             android:layerType="software"
-            app:layout_constraintBottom_toTopOf="@+id/sendButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:src="@drawable/main_button_inactive"
+            app:layout_constraintBottom_toBottomOf="@+id/monitoringImage"
+            app:layout_constraintEnd_toEndOf="@+id/monitoringImage"
+            app:layout_constraintStart_toStartOf="@+id/monitoringImage"
+            app:layout_constraintTop_toTopOf="@+id/monitoringImage" />
 
         <TextView
             android:id="@+id/onOffText"
@@ -164,7 +199,7 @@
             android:text="Off"
             android:textColor="@color/darker"
             android:textSize="20sp"
-            app:fontFamily="@font/poppins"
+            app:fontFamily="@font/poppins_bold"
             app:layout_constraintBottom_toBottomOf="@+id/onOffSwitch"
             app:layout_constraintEnd_toEndOf="@+id/onOffSwitch"
             app:layout_constraintStart_toStartOf="@+id/onOffSwitch"
@@ -176,7 +211,7 @@
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="145dp"
-        android:background="@color/lighter"
+        android:background="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -185,8 +220,7 @@
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="28dp"
-            android:background="@color/warning"
-            android:gravity="center"
+            android:background="@color/dark"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -194,14 +228,26 @@
 
             <TextView
                 android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="System Logs"
-                android:textColor="@color/dark"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Activity Logs"
+                android:textColor="@color/light"
                 app:fontFamily="@font/poppins_semibold"
                 app:lineHeight="12dp"
                 app:textAllCaps="true" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/activityLog"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars = "vertical"
+            android:layout_marginTop="28dp"
+            android:padding="10dp"
+            android:textColor="@color/lighter"
+            app:fontFamily="@font/poppins_extralight"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
