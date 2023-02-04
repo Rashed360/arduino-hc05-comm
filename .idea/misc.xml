@@ -5,18 +5,22 @@
       <map>
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/active_status_light.xml" value="0.152" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/background_light.xml" value="0.1035" />
+        <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/bt_off.xml" value="0.146" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/bt_off_icon.xml" value="0.1035" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/bt_on_icon.xml" value="0.2025" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/inactive_status_light.xml" value="0.1" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/main_button.xml" value="0.1395" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/main_button_active.xml" value="0.1395" />
+        <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/main_button_available.xml" value="0.146" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/main_button_error.xml" value="0.1395" />
+        <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/main_button_inactive.xml" value="0.146" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/monitoring.xml" value="0.1395" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/monitoring_1.xml" value="0.1395" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/monitoring_2.xml" value="0.1395" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/monitoring_3.xml" value="0.1395" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/off_button_shape.xml" value="0.183" />
+        <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/status_active.xml" value="0.146" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/drawable/status_inactive.xml" value="0.1395" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/layout/activity_home.xml" value="0.2" />
         <entry key="..\:/Android/ArduinoBT/app/src/main/res/layout/activity_main.xml" value="0.33" />

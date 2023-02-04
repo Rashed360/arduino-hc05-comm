@@ -26,7 +26,6 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     TextView activityLog, statusText, onOffText, nameText, interfaceText;
     ImageView statusLight, onOffSwitch, enableBTSwitch, monitoringImage, clearView;
     Button connectButton, sendTestButton, stopButton;
-    Spinner deviceSinner;
+    Spinner deviceSpinner;
     AnimationDrawable monitoringAnimation;
 
     private BluetoothAdapter btAdapter;
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         onOffText = (TextView) findViewById(R.id.onOffText);
         nameText = (TextView) findViewById(R.id.nameText);
         interfaceText = (TextView) findViewById(R.id.interfaceText);
-        deviceSinner = (Spinner) findViewById(R.id.deviceSinner);
+        deviceSpinner = (Spinner) findViewById(R.id.deviceSpinner);
         statusLight = (ImageView) findViewById(R.id.statusLight);
         onOffSwitch = (ImageView) findViewById(R.id.onOffSwitch);
         enableBTSwitch = (ImageView) findViewById(R.id.enableBTSwitch);
@@ -83,17 +82,20 @@ public class MainActivity extends AppCompatActivity {
         stopButton = (Button) findViewById(R.id.stopButton);
 
         activityLog.setMovementMethod(new ScrollingMovementMethod());
-        activityLog.setSelected(true);
 
-        clearView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activityLog.setText("");
-            }
-        });
-
-        getPairedDevices();
-        populateSpinner();
+        btAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (btAdapter == null) {
+            Toast.makeText(this, "Bluetooth not supported", Toast.LENGTH_SHORT).show();
+            activityLog.append("\n► Your device doesn't support Bluetooth");
+        } else if (!btAdapter.isEnabled()) {
+            Toast.makeText(this, "Bluetooth not enabled", Toast.LENGTH_SHORT).show();
+            onOffVisual(false);
+        } else {
+            btDevices = btAdapter.getBondedDevices();
+            activityLog.append("► " + btDevices.size() + " Devices Found");
+            onOffVisual(true);
+            populateSpinner();
+        }
 
         enableBTSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,21 +103,11 @@ public class MainActivity extends AppCompatActivity {
                 if (bluetooth_TurnedOn) {
                     checkForBTPermission();
                     btAdapter.disable();
-                    bluetooth_TurnedOn = false;
-                    statusText.setText("Bluetooth Off");
-                    onOffText.setText("Off");
-                    enableBTSwitch.setImageResource(R.drawable.bt_off);
-                    statusLight.setImageResource(R.drawable.status_inactive);
                     Toast.makeText(MainActivity.this, "Bluetooth Turned Off", Toast.LENGTH_SHORT).show();
+                    onOffVisual(false);
                 } else {
-                    Intent intentOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(intentOn,0);
-                    bluetooth_TurnedOn = true;
-                    statusText.setText("Bluetooth On");
-                    onOffText.setText("Connect");
-                    enableBTSwitch.setImageResource(R.drawable.bt_on);
-                    statusLight.setImageResource(R.drawable.status_active);
-                    Toast.makeText(MainActivity.this, "Bluetooth Turned On", Toast.LENGTH_SHORT).show();
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, 0);
                 }
             }
         });
@@ -123,13 +115,16 @@ public class MainActivity extends AppCompatActivity {
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(bluetooth_Connected == false) {
-                    if (deviceSinner.getSelectedItemPosition() == 0) {
+                if (!btAdapter.isEnabled()) {
+                    Toast.makeText(MainActivity.this, "Bluetooth Off", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if(bluetooth_Connected == false) {
+                    if (deviceSpinner.getSelectedItemPosition() == 0) {
                         Toast.makeText(MainActivity.this, "No Device Selected", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    String selectedDevice = deviceSinner.getSelectedItem().toString();
+                    String selectedDevice = deviceSpinner.getSelectedItem().toString();
                     for (BluetoothDevice device : btDevices) {
                         if (selectedDevice.equals(device.getName())) {
                             btDevice = device;
@@ -159,6 +154,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        clearView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activityLog.setText("");
+            }
+        });
+
         sendTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,29 +174,33 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void getPairedDevices() {
-        btAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (btAdapter == null) {
-            Toast.makeText(this, "Bluetooth not supported", Toast.LENGTH_SHORT).show();
-            //finish();
-            return;
-        } else if (!btAdapter.isEnabled()) {
-            Toast.makeText(this, "Bluetooth not enabled", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        btDevices = btAdapter.getBondedDevices();
-        activityLog.append("► " + btDevices.size() + " Devices Found");
-    }
-
     void populateSpinner() {
         ArrayList<String> allDevices = new ArrayList<>();
         allDevices.add("Select Device");
         for (BluetoothDevice btDevice : btDevices) {
             allDevices.add(btDevice.getName());
         }
-        final ArrayAdapter<String> allDevicesAdapter = new ArrayAdapter<String>(this,androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,allDevices);
+        final ArrayAdapter<String> allDevicesAdapter = new ArrayAdapter<String>(MainActivity.this,androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,allDevices);
         allDevicesAdapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
-        deviceSinner.setAdapter(allDevicesAdapter);
+        deviceSpinner.setAdapter(allDevicesAdapter);
+    }
+
+    void onOffVisual(boolean state) {
+        if (state == true) {
+            bluetooth_TurnedOn = true;
+            statusLight.setImageResource(R.drawable.status_active);
+            statusText.setText("Bluetooth On");
+            enableBTSwitch.setImageResource(R.drawable.bt_on);
+            onOffSwitch.setImageResource(R.drawable.main_button_available);
+            onOffText.setText("Connect");
+        } else {
+            bluetooth_TurnedOn = false;
+            statusLight.setImageResource(R.drawable.status_inactive);
+            statusText.setText("Bluetooth Off");
+            enableBTSwitch.setImageResource(R.drawable.bt_off);
+            onOffSwitch.setImageResource(R.drawable.main_button_inactive);
+            onOffText.setText("Off");
+        }
     }
 
     private void checkForBTPermission() {
@@ -262,8 +268,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void run() {
-//            byte[] buffer = new byte[1024];
-            byte[] buffer = new byte[512];
+            byte[] buffer = new byte[1024];
             int bytes;
 
             while (btSkt.isConnected()) {
@@ -344,6 +349,23 @@ public class MainActivity extends AppCompatActivity {
                 dataComm.write(data.getBytes());
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==0) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(MainActivity.this, "Bluetooth Turned On", Toast.LENGTH_SHORT).show();
+                onOffVisual(true);
+                btDevices = btAdapter.getBondedDevices();
+                activityLog.append("► " + btDevices.size() + " Devices Found");
+                populateSpinner();
+            } else {
+                Toast.makeText(MainActivity.this, "Bluetooth request denied", Toast.LENGTH_SHORT).show();
+                onOffVisual(false);
             }
         }
     }
