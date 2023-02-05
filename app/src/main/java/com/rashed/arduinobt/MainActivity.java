@@ -243,20 +243,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void run() {
+            Message msg1 = Message.obtain();
+            msg1.what = BT_STATE_CONNECTING;
+            handler.sendMessage(msg1);
             int numberOfTries = 0;
             do {
                 try {
                     btSocket.connect();
                     if (btSocket.isConnected()) {
-                        Message msg = Message.obtain();
-                        msg.what = BT_STATE_CONNECTED;
-                        handler.sendMessage(msg);
+                        Message msg2 = Message.obtain();
+                        msg2.what = BT_STATE_CONNECTED;
+                        handler.sendMessage(msg2);
                         break;
                     }
                 } catch (IOException e) {
-                    Message msg = Message.obtain();
-                    msg.what = BT_STATE_CONNECTION_FAILED;
-                    handler.sendMessage(msg);
+                    Message msg3 = Message.obtain();
+                    msg3.what = BT_STATE_CONNECTION_FAILED;
+                    handler.sendMessage(msg3);
                     e.printStackTrace();
                 }
                 numberOfTries++;
