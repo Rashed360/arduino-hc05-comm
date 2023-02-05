@@ -225,6 +225,16 @@ public class MainActivity extends AppCompatActivity {
         monitoringAnimation.stop();
     }
 
+    void triggeredVisual() {
+        monitoringImage.setBackgroundResource(R.drawable.triggered_sequence);
+        monitoringAnimation = (AnimationDrawable) monitoringImage.getBackground();
+        onOffText.setText("Triggered");
+        onOffSwitch.setImageResource(R.drawable.main_button_error);
+        monitoringAnimation.start();
+        //2 sec timeout, then ->
+        //monitoringVisual(true);
+    }
+
     private void checkForBTPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "No Permission", Toast.LENGTH_SHORT).show();
@@ -334,10 +344,8 @@ public class MainActivity extends AppCompatActivity {
                     bluetooth_status = BT_CON_STATUS_CONNECTED;
                     activityLog.append(" SUCCESS ");
                     connectButton.setText("DISCONNECT");
-
                     dataComm = new DataCommunication(btSocket);
                     dataComm.start();
-
                     bluetooth_Connected = true;
                     break;
                 case BT_STATE_CONNECTION_FAILED:
@@ -348,9 +356,9 @@ public class MainActivity extends AppCompatActivity {
                 case BT_STATE_MSG_RECEIVED:
                     byte[] inputBuffer = (byte[]) message.obj;
                     String recievedMsg = new String(inputBuffer,0,message.arg1);
-
                     if (recievedMsg.contains("lert")) {
                         activityLog.append("\nALERT: Triggered!");
+                        triggeredVisual();
                     } else if (recievedMsg.contains("eceived")) {
                         activityLog.append("\nACK: Test data received!");
                     }
