@@ -164,12 +164,14 @@ public class MainActivity extends AppCompatActivity {
         sendTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(btSocket == null) {
+                if(!bluetooth_TurnedOn) {
+                    activityLog.append("\n► Bluetooth Off or Not Supported");
+                } else if (!bluetooth_Connected) {
                     activityLog.append("\n► No Device Connected");
-                    return;
+                } else {
+                    sendMessage("0");
+                    activityLog.append("\n► Test Data Sent to " + btDevice.getName());
                 }
-                sendMessage("0");
-                activityLog.append("\n► Test Data Sent to " + btDevice.getName());
             }
         });
     }
