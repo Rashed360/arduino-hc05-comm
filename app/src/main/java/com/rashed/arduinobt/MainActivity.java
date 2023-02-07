@@ -209,16 +209,16 @@ public class MainActivity extends AppCompatActivity {
         monitoringImage.setBackgroundResource(R.drawable.monitoring_sequence);
         monitoringAnimation = (AnimationDrawable) monitoringImage.getBackground();
         if (state == true) {
-            onOffText.setText("Monitoring");
+            onOffText.setText(R.string.bt_state_monitoring);
             onOffSwitch.setImageResource(R.drawable.main_button_active);
             monitoringAnimation.start();
             return;
         }
         if (bluetooth_TurnedOn == true) {
-            onOffText.setText("Connect");
+            onOffText.setText(R.string.bt_state_connect);
             onOffSwitch.setImageResource(R.drawable.main_button_available);
         } else {
-            onOffText.setText("Off");
+            onOffText.setText(R.string.bt_state_off);
             onOffSwitch.setImageResource(R.drawable.main_button_inactive);
         }
         monitoringImage.setBackgroundResource(0);
@@ -228,11 +228,10 @@ public class MainActivity extends AppCompatActivity {
     void triggeredVisual() {
         monitoringImage.setBackgroundResource(R.drawable.triggered_sequence);
         monitoringAnimation = (AnimationDrawable) monitoringImage.getBackground();
-        onOffText.setText("Triggered");
+        onOffText.setText(R.string.bt_state_triggered);
         onOffSwitch.setImageResource(R.drawable.main_button_error);
         monitoringAnimation.start();
-        //2 sec timeout, then ->
-        //monitoringVisual(true);
+        setTimeout(() -> monitoringVisual(true), 1000);
     }
 
     private void checkForBTPermission() {
@@ -376,6 +375,18 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void setTimeout(Runnable runnable, int delay){
+        new Thread(() -> {
+            try {
+                Thread.sleep(delay);
+                runnable.run();
+            }
+            catch (Exception e){
+                System.err.println(e);
+            }
+        }).start();
     }
 
     @Override

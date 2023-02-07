@@ -10,11 +10,4 @@
     <color name="lighter">#F6F6F6</color>
     <color name="dark">#454A4E</color>
     <color name="darker">#2A2A2A</color>
-
-    <color name="purple_700">#81ACAF</color>
-    <color name="black">#2A2A2A</color>
-    <color name="teal_200">#75DCA5</color>
-    <color name="purple_200">#FAB08E</color>
-
-
 </resources>

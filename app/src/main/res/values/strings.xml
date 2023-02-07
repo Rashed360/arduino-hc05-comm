@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">ArduinoBT</string>
+    <string name="app_header">Arduino BT Interface</string>
+    <string name="bt_off">Bluetooth Off</string>
+    <string name="bt_name">Name</string>
+    <string name="bt_interface">Interface</string>
+    <string name="bt_connect">Connect</string>
+    <string name="bt_test">Send Test Data</string>
+    <string name="bt_exit">Stop Service &amp; Exit</string>
+    <string name="bt_log">Activity Logs</string>
+    <string name="bt_state_off">Off</string>
+    <string name="bt_state_connect">Connect</string>
+    <string name="bt_state_monitoring">Monitoring</string>
+    <string name="bt_state_triggered">Triggered</string>
 </resources>
